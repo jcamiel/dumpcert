@@ -32,5 +32,6 @@ jobs:
             libcurl.lib ws2_32.lib crypt32.lib advapi32.lib
 
       - name: Run certinfo test
+        shell: cmd
         run: |
           certinfo.exe
