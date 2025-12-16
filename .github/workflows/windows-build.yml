@@ -22,6 +22,7 @@ jobs:
           .\vcpkg\vcpkg.exe install curl:x64-windows
 
       - name: Build certinfo
+        shell: cmd
         run: |
           cl ^
             /I vcpkg\installed\x64-windows\include ^
