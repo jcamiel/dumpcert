@@ -1,0 +1,35 @@
+name: Windows libcurl build & test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install libcurl via vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          .\vcpkg\bootstrap-vcpkg.bat
+          .\vcpkg\vcpkg.exe install curl:x64-windows
+
+      - name: Build certinfo
+        run: |
+          cl ^
+            /I vcpkg\installed\x64-windows\include ^
+            certinfo.c ^
+            /link ^
+            /LIBPATH:vcpkg\installed\x64-windows\lib ^
+            libcurl.lib ws2_32.lib crypt32.lib advapi32.lib
+
+      - name: Run certinfo test
+        run: |
+          certinfo.exe
