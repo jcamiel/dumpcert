@@ -34,4 +34,4 @@ jobs:
       - name: Run certinfo test
         shell: cmd
         run: |
-          certinfo.exe
+          certinfo.exe https://hurl.dev

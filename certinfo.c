@@ -1,8 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <curl/curl.h>
 
-int main(void)
+int main(int argc, char *argv[])
 {
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s <URL>\n", argv[0]);
+        return 1;
+    }
+
     CURL *curl;
     CURLcode res;
 
@@ -14,13 +20,9 @@ int main(void)
         return 1;
     }
 
-    /* Target HTTPS URL */
-    curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
-
-    /* Enable certificate info */
+    /* Use URL from command-line argument */
+    curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
     curl_easy_setopt(curl, CURLOPT_CERTINFO, 1L);
-
-    /* We don't care about the response body */
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
 
     res = curl_easy_perform(curl);
@@ -32,7 +34,6 @@ int main(void)
         return 1;
     }
 
-    /* Retrieve certificate info */
     struct curl_certinfo *certinfo = NULL;
     res = curl_easy_getinfo(curl, CURLINFO_CERTINFO, &certinfo);
 
