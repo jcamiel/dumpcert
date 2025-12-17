@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+env:
+  TEST_URL: https://hurl.dev/humans.txt
+
 jobs:
   windows:
     runs-on: windows-latest
@@ -34,7 +37,7 @@ jobs:
       - name: Run certinfo test
         shell: cmd
         run: |
-          certinfo.exe https://hurl.dev
+          certinfo.exe ${{ env.TEST_URL }}
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -50,7 +53,7 @@ jobs:
         run: gcc certinfo.c -o certinfo -lcurl
 
       - name: Run certinfo test
-        run: ./certinfo https://hurl.dev
+        run: ./certinfo ${{ env.TEST_URL }}
 
   macos:
     runs-on: macos-latest
@@ -66,4 +69,4 @@ jobs:
         run: clang certinfo.c -o certinfo -lcurl
 
       - name: Run certinfo test
-        run: ./certinfo https://hurl.dev
+        run: ./certinfo ${{ env.TEST_URL }}
