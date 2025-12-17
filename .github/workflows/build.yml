@@ -1,4 +1,4 @@
-name: Windows libcurl build & test
+name: Windows, Ubuntu, and macOS libcurl build & test
 
 on:
   push:
@@ -35,3 +35,35 @@ jobs:
         shell: cmd
         run: |
           certinfo.exe https://hurl.dev
+
+  ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential libcurl4-openssl-dev
+
+      - name: Build certinfo
+        run: gcc certinfo.c -o certinfo -lcurl
+
+      - name: Run certinfo test
+        run: ./certinfo https://hurl.dev
+
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: brew install curl || true
+
+      - name: Build certinfo
+        run: clang certinfo.c -o certinfo -lcurl
+
+      - name: Run certinfo test
+        run: ./certinfo https://hurl.dev
